@@ -320,6 +320,18 @@ char* mpd_get_title(struct mpd_song const *song)
     return str;
 }
 
+char* mpd_get_artist(struct mpd_song const *song)
+{
+    char *str;
+
+    str = (char *)mpd_song_get_tag(song, MPD_TAG_ARTIST, 0);
+    if(str == NULL){
+        str = basename((char *)mpd_song_get_uri(song));
+    }
+
+    return str;
+}
+
 int mpd_put_state(char *buffer, int *current_song_id, unsigned *queue_version)
 {
     struct mpd_status *status;
