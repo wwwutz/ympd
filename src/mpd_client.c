@@ -332,6 +332,18 @@ char* mpd_get_artist(struct mpd_song const *song)
     return str;
 }
 
+char* mpd_get_album(struct mpd_song const *song)
+{
+    char *str;
+
+    str = (char *)mpd_song_get_tag(song, MPD_TAG_ALBUM, 0);
+    if(str == NULL){
+        str = basename((char *)mpd_song_get_uri(song));
+    }
+
+    return str;
+}
+
 int mpd_put_state(char *buffer, int *current_song_id, unsigned *queue_version)
 {
     struct mpd_status *status;
@@ -386,13 +398,13 @@ int mpd_put_current_song(char *buffer)
     if(mpd_song_get_tag(song, MPD_TAG_ARTIST, 0) != NULL)
     {
         cur += json_emit_raw_str(cur, end - cur, ",\"artist\":");
-        cur += json_emit_quoted_str(cur, end - cur, mpd_song_get_tag(song, MPD_TAG_ARTIST, 0));
+        cur += json_emit_quoted_str(cur, end - cur, mpd_get_artist(song));
     }
 
     if(mpd_song_get_tag(song, MPD_TAG_ALBUM, 0) != NULL)
     {
         cur += json_emit_raw_str(cur, end - cur, ",\"album\":");
-        cur += json_emit_quoted_str(cur, end - cur, mpd_song_get_tag(song, MPD_TAG_ALBUM, 0));
+        cur += json_emit_quoted_str(cur, end - cur, mpd_get_album(song);
     }
 
     cur += json_emit_raw_str(cur, end - cur, "}}");
